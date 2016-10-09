@@ -107,7 +107,7 @@ Page({
     },
     upper: function upper(event) {
         isMoveTop = true;
-        console.log(isMoveTop, event);
+        // console.log(isMoveTop, event);
     },
     tapMove: function tapMove(event) {
         if (isMoveTop) {
@@ -121,7 +121,7 @@ Page({
 
             pageYArray[2] = pageYNum;
 
-            console.log(pageYArray);
+            // console.log(pageYArray);
 
             var animation = wx.createAnimation({
                 duration: 400,
