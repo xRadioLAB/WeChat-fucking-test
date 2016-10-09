@@ -1,3 +1,5 @@
+'use strict';
+
 // posts.js
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
@@ -11,16 +13,16 @@ Page({
         page: 1,
         tab: 'all',
         // scrollTop: 10,
-        animationData: {},
+        animationData: {}
     },
-    onPullDownRefresh: function () {
+    onPullDownRefresh: function onPullDownRefresh() {
         this.fetchData();
         console.log('下拉刷新', new Date());
     },
-    onLoad: function () {
+    onLoad: function onLoad() {
         this.fetchData();
     },
-    onTapTag: function (e) {
+    onTapTag: function onTapTag(e) {
         var self = this;
         var tab = e.currentTarget.id;
         self.setData({
@@ -34,7 +36,7 @@ Page({
             this.fetchData();
         }
     },
-    fetchData: function (data) {
+    fetchData: function fetchData(data) {
         var self = this;
         self.setData({
             hidden: false
@@ -48,7 +50,7 @@ Page({
         }
         wx.request({
             url: Api.getTopics(data),
-            success: function (res) {
+            success: function success(res) {
                 self.setData({
                     postsList: self.data.postsList.concat(res.data.data.map(function (item) {
                         item.last_reply_at = util.getDateDiff(new Date(item.last_reply_at));
@@ -63,15 +65,15 @@ Page({
             }
         });
     },
-    redictDetail: function (e) {
+    redictDetail: function redictDetail(e) {
         console.log('我要看详情');
         var id = e.currentTarget.id,
             url = '../detail/detail?id=' + id;
         wx.navigateTo({
             url: url
-        })
+        });
     },
-    lower: function (e) {
+    lower: function lower(e) {
         var self = this;
         self.setData({
             page: self.data.page + 1
@@ -87,13 +89,13 @@ Page({
             });
         }
     },
-    upper: function (event) {
+    upper: function upper(event) {
 
-        console.log(isTouchmove, event)
+        console.log(isTouchmove, event);
 
         isTouchmove = true;
 
-        console.log(isTouchmove, event)
+        console.log(isTouchmove, event);
 
         /* var animation = wx.createAnimation( {
           duration: 400,
@@ -106,13 +108,12 @@ Page({
           animationData: animation.export()
         }) */
     },
-    tapMove: function (event) {
+    tapMove: function tapMove(event) {
         // if(){
         //
         // }
     }
-})
-
+});
 
 // var order = ['red', 'yellow', 'blue', 'green', 'red']
 // Page({
