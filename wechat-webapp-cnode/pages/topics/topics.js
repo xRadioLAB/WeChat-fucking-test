@@ -126,14 +126,15 @@ Page({
             });
             _this.animation = animation;
 
-            if (pageYNum < 30) {
-                animation.translate(0, pageYNum * 20).step();
+            if (pageYNum < 100) {
+                animation.translate(0, pageYNum).step();
                 _this.setData({
                     animationData: animation.export()
                 });
             } else {
                 animation.translate(0, 0).step({
-                    duration: 600
+                    duration: 400,
+                    timingFunction: 'ease-in'
                 });
                 _this.setData({
                     animationData: animation.export()
