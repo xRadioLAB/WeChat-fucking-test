@@ -4,6 +4,7 @@
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
 var isTouchmove = false;
+var pageYArray = [0, 0];
 
 Page({
     data: {
@@ -90,9 +91,6 @@ Page({
         }
     },
     upper: function upper(event) {
-
-        console.log(isTouchmove, event);
-
         isTouchmove = true;
 
         console.log(isTouchmove, event);
@@ -109,9 +107,47 @@ Page({
         }) */
     },
     tapMove: function tapMove(event) {
-        // if(){
-        //
-        // }
+        var _this = this;
+        if (isTouchmove) {
+
+            if (pageYArray[0] === 0) {
+                pageYArray[0] = event.touches[0].pageY;
+            } else {
+                pageYArray[1] = event.touches[0].pageY;
+            }
+
+            var pageYNum = pageYArray[1] - pageYArray[0];
+
+            console.log(pageYArray, pageYNum);
+
+            var animation = wx.createAnimation({
+                duration: 1000,
+                timingFunction: 'ease-out'
+            });
+            _this.animation = animation;
+
+            if (pageYNum < 30) {
+                animation.translate(0, pageYNum * 20).step();
+                _this.setData({
+                    animationData: animation.export()
+                });
+            } else {
+                animation.translate(0, 0).step({
+                    duration: 600
+                });
+                _this.setData({
+                    animationData: animation.export()
+                });
+                isTouchmove = false;
+                pageYArray = [0, 0];
+            }
+
+
+        }
+    },
+    touchend: function touchend() {
+        isTouchmove = false;
+        pageYArray = [0, 0];
     }
 });
 
