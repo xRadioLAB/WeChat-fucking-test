@@ -170,7 +170,7 @@ Page({
             duration: 600,
             timingFunction: 'ease-in'
         });
-        animation.translate(0, -10).step({
+        animation.translate(0, 0).step({
             duration: 600,
             timingFunction: 'ease-out'
         });
