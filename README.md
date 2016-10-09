@@ -1,6 +1,6 @@
 # WeChat-fucking-test
 
-The WeChat fucking testes
+The WeChat fucking test
 
 ## TIPS
 
