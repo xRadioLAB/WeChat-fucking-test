@@ -8,6 +8,7 @@
     <view class="top-bar-item" id="job" catchtap="onTapTag">招聘</view>
   </view>
   <!--<scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" scroll-top="{{scrollTop}}" bindtouchmove="tapMove">-->
+  <!--<scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper" animation="{{animationData}}" bindtouchmove="tapMove" bindtouchend="touchend" bindtouchstart="touchstart">-->
   <scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper" animation="{{animationData}}" bindtouchmove="tapMove" bindtouchend="touchend">
     <block wx:for="{{postsList}}">
       <view class="posts-item" index="{{index}}" id="{{item.id}}" catchtap="redictDetail">

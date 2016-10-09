@@ -3,8 +3,10 @@
 // posts.js
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
-var isTouchmove = false;
-var pageYArray = [0, 0];
+
+var isMoveTop = true;
+var pageYArray = [0, 0, 0];
+var windowHeight = null;
 
 Page({
     data: {
@@ -13,7 +15,6 @@ Page({
         hidden: false,
         page: 1,
         tab: 'all',
-        // scrollTop: 10,
         animationData: {}
     },
     onPullDownRefresh: function onPullDownRefresh() {
@@ -22,6 +23,20 @@ Page({
     },
     onLoad: function onLoad() {
         this.fetchData();
+        // 获取设备信息
+        wx.getSystemInfo({
+            success: function (res) {
+                // console.log(res.model)
+                // console.log(res.pixelRatio)
+                // console.log(res.windowWidth)
+                // console.log(res.windowHeight)
+                // 获取窗体高度
+                windowHeight = res.windowHeight;
+                // console.log(res.language)
+                // console.log(res.version)
+            }
+        });
+        this.resetStatus();
     },
     onTapTag: function onTapTag(e) {
         var self = this;
@@ -91,25 +106,11 @@ Page({
         }
     },
     upper: function upper(event) {
-        isTouchmove = true;
-
-        console.log(isTouchmove, event);
-
-        /* var animation = wx.createAnimation( {
-          duration: 400,
-          timingFunction: 'ease-out'
-        })
-        this.animation = animation
-        animation.translate( 0, 100 ).step({duration: 1000})
-        animation.translate( 0, 0 ).step({duration: 500})
-        this.setData( {
-          animationData: animation.export()
-        }) */
+        isMoveTop = true;
+        console.log(isMoveTop, event);
     },
     tapMove: function tapMove(event) {
-        var _this = this;
-        if (isTouchmove) {
-
+        if (isMoveTop) {
             if (pageYArray[0] === 0) {
                 pageYArray[0] = event.touches[0].pageY;
             } else {
@@ -118,37 +119,66 @@ Page({
 
             var pageYNum = pageYArray[1] - pageYArray[0];
 
-            console.log(pageYArray, pageYNum);
+            pageYArray[2] = pageYNum;
+
+            console.log(pageYArray);
 
             var animation = wx.createAnimation({
-                duration: 1000,
-                timingFunction: 'ease-out'
+                duration: 400,
+                timingFunction: 'ease'
             });
-            _this.animation = animation;
+            this.animation = animation;
 
-            if (pageYNum < 100) {
-                animation.translate(0, pageYNum).step();
-                _this.setData({
-                    animationData: animation.export()
-                });
-            } else {
-                animation.translate(0, 0).step({
-                    duration: 400,
+            if (pageYNum < (windowHeight * .8)) {
+                // 向下拖拽动画
+                animation.translate(0, pageYNum).step({
+                    duration: 420,
                     timingFunction: 'ease-in'
                 });
-                _this.setData({
-                    animationData: animation.export()
-                });
-                isTouchmove = false;
-                pageYArray = [0, 0];
+            } else {
+                this.jumping(animation);
+                this.resetStatus();
             }
-
-
+            this.setData({
+                animationData: animation.export(),
+            });
+        }
+    },
+    touchstart: function touchend() {
+        if (isMoveTop !== false) {
+            this.moveToTop();
+            this.resetStatus();
         }
     },
     touchend: function touchend() {
-        isTouchmove = false;
-        pageYArray = [0, 0];
+        this.moveToTop();
+        this.resetStatus();
+    },
+    moveToTop: function () {
+        var animation = wx.createAnimation({
+            duration: 400,
+            timingFunction: 'ease'
+        });
+        this.animation = animation;
+        this.jumping(animation);
+        this.setData({
+            animationData: animation.export(),
+        });
+    },
+    jumping: function (animation) {
+        animation.translate(0, -(pageYArray[2] * .12)).step({
+            duration: 600,
+            timingFunction: 'ease-in'
+        });
+        animation.translate(0, -10).step({
+            duration: 600,
+            timingFunction: 'ease-out'
+        });
+    },
+    resetStatus: function () {
+        console.log('i\'m resetStatus');
+        isMoveTop = false;
+        pageYArray = [0, 0, 0];
     }
 });
 
