@@ -1,7 +1,10 @@
+'use strict';
+
 // posts.js
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
 var isTouchmove = false;
+var pageYArray = [0, 0];
 
 Page({
     data: {
@@ -11,16 +14,16 @@ Page({
         page: 1,
         tab: 'all',
         // scrollTop: 10,
-        animationData: {},
+        animationData: {}
     },
-    onPullDownRefresh: function () {
+    onPullDownRefresh: function onPullDownRefresh() {
         this.fetchData();
         console.log('下拉刷新', new Date());
     },
-    onLoad: function () {
+    onLoad: function onLoad() {
         this.fetchData();
     },
-    onTapTag: function (e) {
+    onTapTag: function onTapTag(e) {
         var self = this;
         var tab = e.currentTarget.id;
         self.setData({
@@ -34,7 +37,7 @@ Page({
             this.fetchData();
         }
     },
-    fetchData: function (data) {
+    fetchData: function fetchData(data) {
         var self = this;
         self.setData({
             hidden: false
@@ -48,7 +51,7 @@ Page({
         }
         wx.request({
             url: Api.getTopics(data),
-            success: function (res) {
+            success: function success(res) {
                 self.setData({
                     postsList: self.data.postsList.concat(res.data.data.map(function (item) {
                         item.last_reply_at = util.getDateDiff(new Date(item.last_reply_at));
@@ -63,15 +66,15 @@ Page({
             }
         });
     },
-    redictDetail: function (e) {
+    redictDetail: function redictDetail(e) {
         console.log('我要看详情');
         var id = e.currentTarget.id,
             url = '../detail/detail?id=' + id;
         wx.navigateTo({
             url: url
-        })
+        });
     },
-    lower: function (e) {
+    lower: function lower(e) {
         var self = this;
         self.setData({
             page: self.data.page + 1
@@ -87,13 +90,10 @@ Page({
             });
         }
     },
-    upper: function (event) {
-
-        console.log(isTouchmove, event)
-
+    upper: function upper(event) {
         isTouchmove = true;
 
-        console.log(isTouchmove, event)
+        console.log(isTouchmove, event);
 
         /* var animation = wx.createAnimation( {
           duration: 400,
@@ -106,13 +106,50 @@ Page({
           animationData: animation.export()
         }) */
     },
-    tapMove: function (event) {
-        // if(){
-        //
-        // }
-    }
-})
+    tapMove: function tapMove(event) {
+        var _this = this;
+        if (isTouchmove) {
 
+            if (pageYArray[0] === 0) {
+                pageYArray[0] = event.touches[0].pageY;
+            } else {
+                pageYArray[1] = event.touches[0].pageY;
+            }
+
+            var pageYNum = pageYArray[1] - pageYArray[0];
+
+            console.log(pageYArray, pageYNum);
+
+            var animation = wx.createAnimation({
+                duration: 1000,
+                timingFunction: 'ease-out'
+            });
+            _this.animation = animation;
+
+            if (pageYNum < 30) {
+                animation.translate(0, pageYNum * 20).step();
+                _this.setData({
+                    animationData: animation.export()
+                });
+            } else {
+                animation.translate(0, 0).step({
+                    duration: 600
+                });
+                _this.setData({
+                    animationData: animation.export()
+                });
+                isTouchmove = false;
+                pageYArray = [0, 0];
+            }
+
+
+        }
+    },
+    touchend: function touchend() {
+        isTouchmove = false;
+        pageYArray = [0, 0];
+    }
+});
 
 // var order = ['red', 'yellow', 'blue', 'green', 'red']
 // Page({

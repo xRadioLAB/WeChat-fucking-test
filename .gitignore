@@ -41,3 +41,4 @@ lib/
 lib-master/
 # local/
 sundries/
+!logs/
