@@ -9,7 +9,8 @@
   </view>
   <!--<scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" scroll-top="{{scrollTop}}" bindtouchmove="tapMove">-->
   <!--<scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper" animation="{{animationData}}" bindtouchmove="tapMove" bindtouchend="touchend" bindtouchstart="touchstart">-->
-  <scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper" animation="{{animationData}}" bindtouchmove="tapMove" bindtouchend="touchend">
+  <!--<scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper" animation="{{animationData}}" bindtouchmove="tapMove" bindtouchend="touchend">-->
+  <scroll-view class="posts-list" style="height:100%" scroll-y="true" bindscrolltolower="lower" bindscrolltoupper="upper">
     <block wx:for="{{postsList}}">
       <view class="posts-item" index="{{index}}" id="{{item.id}}" catchtap="redictDetail">
         <view class="author">
